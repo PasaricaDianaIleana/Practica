@@ -53,7 +53,7 @@ namespace WebApplication1.Controllers.CategoryController
 
         }
         [HttpPost]
-        public IActionResult AddCategory([FromBody] Category category)
+        public IActionResult AddCategory( Category category)
         {
             try
             {
@@ -65,9 +65,10 @@ namespace WebApplication1.Controllers.CategoryController
                 {
                     return BadRequest("Category data is invalid");
                 }
+                
                 var NewCategory = _repo.Insert(category);
 
-                return Ok(NewCategory);
+                return CreatedAtAction("GetAll", new { CategoryId = category.CategoryId }, category);
             }
             catch (Exception ex)
             {

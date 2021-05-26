@@ -34,11 +34,21 @@ namespace WebApplication1
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApplication1", Version = "v1" });
             });
-
-            services.AddControllers();
+            
+            services.AddControllers()
+                .AddNewtonsoftJson();
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy",
+                    c => c.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                   
+                    .AllowAnyMethod());
+            });
             services.AddDbContext<ShopContext>(options =>
            options.UseSqlServer(Configuration.GetConnectionString("ShopContext")));
             services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IProductsRepository, ProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,10 +61,13 @@ namespace WebApplication1
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApplication1 v1"));
             }
 
+
+           
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
             app.UseRouting();
-
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
