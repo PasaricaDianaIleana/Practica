@@ -21,7 +21,6 @@ namespace WebApplication1.Domains
         public virtual string Image { get; set; }
 
         public virtual int CategoryId { get; set; }
-        [NotMapped]
-        public IFormFile ImageFile { get; set; }
+     
     }
 }

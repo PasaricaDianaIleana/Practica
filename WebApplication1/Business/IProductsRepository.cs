@@ -11,7 +11,8 @@ namespace WebApplication1.Business
         List<Product> GetProducts();
         Product getProductById(int id);
        Product AddProduct(Product product);
-         //Task<string> UploadFile(Product product);
+        void UpdateProduct(Product product);
+        //Task<string> UploadFile(Product product);
 
     }
 }

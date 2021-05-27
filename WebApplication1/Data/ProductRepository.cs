@@ -39,5 +39,11 @@ namespace WebApplication1.Data
         {
             return _context.Products.ToList();
         }
+
+        public void UpdateProduct(Product product)
+        {
+            _context.Attach(product);
+            _context.SaveChanges();
+        }
     }
 }

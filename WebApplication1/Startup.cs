@@ -37,14 +37,14 @@ namespace WebApplication1
             
             services.AddControllers()
                 .AddNewtonsoftJson();
-            services.AddCors(opt =>
-            {
-                opt.AddPolicy("CorsPolicy",
-                    c => c.AllowAnyOrigin()
-                    .AllowAnyHeader()
+            //services.AddCors(opt =>
+            //{
+            //    opt.AddPolicy("CorsPolicy",
+            //        c => c.AllowAnyOrigin()
+            //        .AllowAnyHeader()
                    
-                    .AllowAnyMethod());
-            });
+            //        .AllowAnyMethod());
+            //});
             services.AddDbContext<ShopContext>(options =>
            options.UseSqlServer(Configuration.GetConnectionString("ShopContext")));
             services.AddTransient<ICategoryRepository, CategoryRepository>();
@@ -67,9 +67,12 @@ namespace WebApplication1
 
            
             app.UseRouting();
-            app.UseCors("CorsPolicy");
+            app.UseCors(action=> 
+            action.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
             app.UseAuthorization();
-           
+            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
