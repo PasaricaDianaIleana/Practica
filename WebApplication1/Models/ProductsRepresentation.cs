@@ -9,12 +9,12 @@ namespace WebApplication1.Models
 {
     public class ProductsRepresentation
     {
-        //public ProductsRepresentation(List<Product> products)
-        //{
-        //    this.Products = products.Select(x => new ProductRepresentation(x.ProductId, x.Name, x.Description, x.Price, x.BasePrice,x.Image,x.CategoryId)).ToList();
-        //}
+        public ProductsRepresentation(List<Product> products)
+        {
+            this.Products = products.Select(x => new ProductRepresentation(x.ProductId, x.Name, x.Description, x.Price, x.BasePrice, x.Image, x.CategoryId)).ToList();
+        }
 
-        //[JsonProperty(PropertyName ="products")]
-        //public List<ProductRepresentation> Products { get; set; }
+        [JsonProperty(PropertyName = "products")]
+        public List<ProductRepresentation> Products { get; set; }
     }
 }

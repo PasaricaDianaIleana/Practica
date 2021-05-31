@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Business;
@@ -37,14 +39,7 @@ namespace WebApplication1
             
             services.AddControllers()
                 .AddNewtonsoftJson();
-            //services.AddCors(opt =>
-            //{
-            //    opt.AddPolicy("CorsPolicy",
-            //        c => c.AllowAnyOrigin()
-            //        .AllowAnyHeader()
-                   
-            //        .AllowAnyMethod());
-            //});
+       
             services.AddDbContext<ShopContext>(options =>
            options.UseSqlServer(Configuration.GetConnectionString("ShopContext")));
             services.AddTransient<ICategoryRepository, CategoryRepository>();
@@ -72,7 +67,12 @@ namespace WebApplication1
             .AllowAnyHeader()
             .AllowAnyMethod());
             app.UseAuthorization();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Images")),
+                RequestPath="/Images"
+            });
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using WebApplication1.Business;
 using WebApplication1.Domains;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers.ProductController
 {
@@ -22,10 +23,10 @@ namespace WebApplication1.Controllers.ProductController
 
         [HttpGet]
         [Route("api/product")]
-        public IActionResult GetProducts()
+        public ProductsRepresentation GetProducts()
         {
             var products = _repository.GetProducts();
-            return Ok(products);
+            return new ProductsRepresentation(products);
         }
 
 
@@ -74,9 +75,19 @@ namespace WebApplication1.Controllers.ProductController
             string ext = Path.GetExtension(fileName).ToLower();
             var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "images",fileName);
             var image = System.IO.File.OpenRead(imagePath);
-            return  File(image, "image/jpeg");
+            return  File(image+ext, "image/jpeg");
         }
 
+        [HttpGet]
+        [Route("api/produt/{id}")]
+        public IActionResult GetImage([FromRoute] int id)
+        {
+            var data = _repository.getProductById(id);
+            var file = data.Image;
+            var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "images", file);
+            var image = System.IO.File.OpenRead(imagePath);
+            return File(image, "image/jpeg");
+        }
     }
 
 }
