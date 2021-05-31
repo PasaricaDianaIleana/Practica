@@ -75,7 +75,7 @@ namespace WebApplication1.Controllers.ProductController
             string ext = Path.GetExtension(fileName).ToLower();
             var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "images",fileName);
             var image = System.IO.File.OpenRead(imagePath);
-            return  File(image+ext, "image/jpeg");
+            return  File(image, "image/jpeg");
         }
 
         [HttpGet]
