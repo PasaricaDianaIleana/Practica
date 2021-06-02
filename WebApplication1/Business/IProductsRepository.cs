@@ -12,7 +12,7 @@ namespace WebApplication1.Business
         Product getProductById(int id);
        Product AddProduct(Product product);
         void UpdateProduct(Product product);
-        //Task<string> UploadFile(Product product);
+        Product DeleteProduct(int id);
 
     }
 }

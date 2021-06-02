@@ -28,7 +28,18 @@ namespace WebApplication1.Data
             _context.SaveChanges();
             return product;
         }
-      
+
+        public Product DeleteProduct(int id)
+        {
+            var product = _context.Products.FirstOrDefault(x => x.ProductId == id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+
+            }
+            return null;
+        }
 
         public Product getProductById(int id)
         {

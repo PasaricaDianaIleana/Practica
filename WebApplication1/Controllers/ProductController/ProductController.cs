@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using WebApplication1.Business;
 using WebApplication1.Domains;
@@ -31,17 +32,18 @@ namespace WebApplication1.Controllers.ProductController
 
 
         [HttpPost]
-        [Route("api/AddProduct")]
+        [Route("api/product")]
+
         public IActionResult AddProduct([FromBody] Product product)
         {
 
             if (product == null)
             {
-                return BadRequest("Category data is null");
+                return BadRequest();
             }
             if (!ModelState.IsValid)
             {
-                return BadRequest("Category data is invalid");
+                return BadRequest();
             }
 
 
@@ -66,14 +68,32 @@ namespace WebApplication1.Controllers.ProductController
         
         }
 
-
+        [HttpDelete]
+        [Route("api/product/{id}")]
+        public IActionResult DeleteProduct(int id)
+        {
+            try
+            {
+                var product = _repository.getProductById(id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+                var delete = _repository.DeleteProduct(id);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
         [HttpGet]
         [Route("api/product/{id}/{fileName}")]
         public IActionResult GetImage(int id,string fileName)
         {
             string ext = Path.GetExtension(fileName).ToLower();
-            var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "images",fileName);
+            var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "images",fileName+ext);
             var image = System.IO.File.OpenRead(imagePath);
             return  File(image, "image/jpeg");
         }

@@ -11,7 +11,7 @@ namespace WebApplication1.Models
     {
         public CategoriesRepresentation(List<Category> categories)
         {
-            this.Categories = categories.Select(x => new CategoryRepresentation(x.CategoryId, x.Name)).ToList();
+            this.Categories = categories.Select(x => new CategoryRepresentation(x.CategoryId, x.Name,x.Description)).ToList();
         }
 
         [JsonProperty(PropertyName = "categories")]

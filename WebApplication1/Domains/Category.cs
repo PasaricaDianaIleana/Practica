@@ -14,6 +14,7 @@ namespace WebApplication1.Domains
 
         public virtual int CategoryId { get; set; }
         public virtual string Name { get; set; }
+        public virtual string Description { get; set; }
         [ForeignKey("CategoryId")]
         public virtual ICollection<Product> Products { get; set; }
     }
