@@ -28,7 +28,15 @@ namespace WebApplication1.Controllers.CategoryController
             var dbCategories = _repo.GetCategories();
             return new CategoriesRepresentation(dbCategories);
         }
-        [HttpPut("{id}")]
+        [HttpGet]
+        [Route("{id}")]
+        public  IActionResult GetCategoryById(int id)
+        {
+            var category = _repo.getCategoryById(id);
+            return Ok(category);
+        }
+        [HttpPut]
+        [Route("{id}")]
         public IActionResult Update(int id, Category category)
         {
             try

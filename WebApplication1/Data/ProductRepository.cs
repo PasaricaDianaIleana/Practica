@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,10 +52,32 @@ namespace WebApplication1.Data
             return _context.Products.ToList();
         }
 
-        public void UpdateProduct(Product product)
+        public List<Product> getProductsByCategoryId(int id)
         {
-            _context.Attach(product);
-            _context.SaveChanges();
+            return _context.Products.Where(x => x.CategoryId == id).ToList();
+        }
+
+
+        public Product UpdateProduct(Product product)
+        {
+          
+            var productData = _context.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+            if (productData != null)
+            {
+               
+                productData.Name = product.Name;
+                productData.Description = product.Description;
+                productData.Price = product.Price;
+                productData.CategoryId = product.CategoryId;
+                productData.BasePrice = product.BasePrice;
+                productData.Image = product.Image;
+                
+               
+                _context.SaveChanges();
+                return productData;
+
+            }
+            return null;
         }
     }
 }

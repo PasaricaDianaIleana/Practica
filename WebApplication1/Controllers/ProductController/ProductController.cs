@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using WebApplication1.Business;
 using WebApplication1.Domains;
 using WebApplication1.Models;
@@ -16,6 +17,7 @@ namespace WebApplication1.Controllers.ProductController
         private readonly IProductsRepository _repository;
         private readonly IWebHostEnvironment _hostEnvironment;
 
+        
         public ProductController(IProductsRepository repository,IWebHostEnvironment hostEnvironment)
         {
             _repository = repository;
@@ -30,12 +32,29 @@ namespace WebApplication1.Controllers.ProductController
             return new ProductsRepresentation(products);
         }
 
+        
+       [HttpGet]
+        [Route("api/product/{id}")]
+        public  IActionResult GetProductById(int id)
+        {
+            var product = _repository.getProductById(id);
+            return Ok(product);
+        }
+        [HttpGet]
+        [Route("api/product/ByCategory/{id}")]
+        public ProductsRepresentation GetProductsByCategoryId(int id)
+        {
 
+            var products = _repository.getProductsByCategoryId(id);
+            return new ProductsRepresentation(products);
+
+        }
         [HttpPost]
         [Route("api/product")]
 
         public IActionResult AddProduct([FromBody] Product product)
         {
+
 
             if (product == null)
             {
@@ -53,21 +72,23 @@ namespace WebApplication1.Controllers.ProductController
 
         }
 
-        [HttpPost]
+      [HttpPost]
         [Route("api/product/image/{id}")]
         public IActionResult PostMethod([FromRoute] int id, [FromForm] IFormFile file)
         {
             var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "images", file.FileName);
-            var streamImage = new FileStream(imagePath, FileMode.Create);
-            file.CopyTo(streamImage);
-          
+ 
+            using(var streamImage = new FileStream(imagePath, FileMode.Create))
+            {
+                file.CopyTo(streamImage);
+            }
             var product = _repository.getProductById(id);
             product.Image = file.FileName;
             _repository.UpdateProduct(product);
             return Ok();
         
         }
-
+       
         [HttpDelete]
         [Route("api/product/{id}")]
         public IActionResult DeleteProduct(int id)
@@ -98,15 +119,39 @@ namespace WebApplication1.Controllers.ProductController
             return  File(image, "image/jpeg");
         }
 
-        [HttpGet]
-        [Route("api/produt/{id}")]
+       [HttpGet]
+        [Route("api/product/image/{id}")]
         public IActionResult GetImage([FromRoute] int id)
         {
             var data = _repository.getProductById(id);
             var file = data.Image;
             var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "images", file);
             var image = System.IO.File.OpenRead(imagePath);
+     
             return File(image, "image/jpeg");
+        }
+       [HttpPut]
+       [Route("api/product/{id}")]
+       public ActionResult<Product> UpdateProduct(int id, [FromBody]Product product)
+        {
+            try
+            {
+                if (id != product.ProductId)
+                {
+                    return BadRequest();
+                }
+                var productData = _repository.getProductById(id);
+                if (productData == null)
+                {
+                    return BadRequest();
+                }
+               return  _repository.UpdateProduct(product);
+           
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 

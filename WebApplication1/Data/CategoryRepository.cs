@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,6 +38,7 @@ namespace WebApplication1.Data
             return _context.Categories.FirstOrDefault(c => c.CategoryId == id);
         }
 
+  
         public Category Insert(Category category)
         {
             _context.Categories.Add(category);
@@ -54,6 +56,7 @@ namespace WebApplication1.Data
             {
                 findCategory.Name = category.Name;
                 findCategory.Products = category.Products;
+                findCategory.Description = category.Description;
 
                 _context.SaveChanges();
 

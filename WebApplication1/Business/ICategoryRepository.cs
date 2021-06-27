@@ -13,5 +13,7 @@ namespace WebApplication1.Business
         Category UpdateCategory(Category category);
           Category DeleteCategory(int id);
         public Category getCategoryById(int id);
+
+       
     }
 }

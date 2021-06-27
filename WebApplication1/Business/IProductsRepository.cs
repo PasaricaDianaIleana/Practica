@@ -11,8 +11,9 @@ namespace WebApplication1.Business
         List<Product> GetProducts();
         Product getProductById(int id);
        Product AddProduct(Product product);
-        void UpdateProduct(Product product);
+        Product UpdateProduct(Product product);
         Product DeleteProduct(int id);
+        List<Product> getProductsByCategoryId(int id);
 
     }
 }
